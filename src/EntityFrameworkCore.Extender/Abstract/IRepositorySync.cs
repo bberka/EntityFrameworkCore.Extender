@@ -7,6 +7,7 @@ public interface IRepositorySync<TEntity>
 {
   IQueryable<TEntity> GetAll();
   IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> predicate);
+
   IQueryable<TEntity> Get<TKey>(
     Expression<Func<TEntity, bool>>? predicateExpression = null,
     Expression<Func<TEntity, TKey>>? orderByExpression = null,
@@ -14,13 +15,20 @@ public interface IRepositorySync<TEntity>
     int? skip = null,
     int? take = null,
     params Expression<Func<TEntity, object>>[] includeProperties);
+
   TEntity? Find(params object[] keys);
   TEntity? SingleOrDefault();
   TEntity? SingleOrDefault(Expression<Func<TEntity, bool>> predicate);
-  TEntity? SingleOrDefault(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties);
+
+  TEntity? SingleOrDefault(Expression<Func<TEntity, bool>> predicate,
+    params Expression<Func<TEntity, object>>[] includeProperties);
+
   TEntity? FirstOrDefault();
   TEntity? FirstOrDefault(Expression<Func<TEntity, bool>> predicate);
-  TEntity? FirstOrDefault(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties);
+
+  TEntity? FirstOrDefault(Expression<Func<TEntity, bool>> predicate,
+    params Expression<Func<TEntity, object>>[] includeProperties);
+
   bool Any();
   bool Any(Expression<Func<TEntity, bool>> predicate);
   int Count();
@@ -32,6 +40,4 @@ public interface IRepositorySync<TEntity>
   void Delete(TEntity entity);
   void RemoveRange(IEnumerable<TEntity> entities);
   bool HasChanges();
-
-
 }
