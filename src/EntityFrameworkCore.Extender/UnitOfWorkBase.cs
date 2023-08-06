@@ -16,6 +16,7 @@ public abstract class UnitOfWorkBase : IUnitOfWorkBase
 {
   protected readonly DbContext DbContext;
 
+  protected bool EnableDefaultErrorLogging { get; set; } = true;
   protected UnitOfWorkBase(DbContext dbContext) {
     DbContext = dbContext;
     IsTransactionBegan = false;
@@ -31,27 +32,29 @@ public abstract class UnitOfWorkBase : IUnitOfWorkBase
       BeginTransaction();
       var hasChanges = HasChanges();
       if (!hasChanges) {
-        Log.Debug("Db save failed: no changes");
+        if (EnableDefaultErrorLogging)
+          Log.Debug("Db save failed: no changes");
         return new DbActionResult(false, false, 0, null);
       }
 
       var affectedRows = DbContext.SaveChanges();
       if (affectedRows > 0) {
         Transaction!.CommitAsync();
-        Log.Debug("Db saved successfully");
+        if (EnableDefaultErrorLogging)
+          Log.Debug("Db saved successfully");
         return new DbActionResult(true, false, affectedRows, null);
       }
 
       Transaction!.Rollback();
-      Log.Debug("Db save failed: affected rows 0");
+      if (EnableDefaultErrorLogging)
+        Log.Debug("Db save failed: affected rows 0");
       return new DbActionResult(false, true, 0, null);
-    }
-    catch (Exception ex) {
+    } catch (Exception ex) {
       Transaction!.Rollback();
-      Log.Fatal(ex, "InternalDbError");
+      if (EnableDefaultErrorLogging)
+        Log.Fatal(ex, "InternalDbError");
       return new DbActionResult(false, true, 0, ex);
-    }
-    finally {
+    } finally {
       ResetTransaction();
     }
   }
@@ -69,12 +72,10 @@ public abstract class UnitOfWorkBase : IUnitOfWorkBase
 
       await Transaction!.RollbackAsync();
       return new DbActionResult(false, true, 0, null);
-    }
-    catch (Exception ex) {
+    } catch (Exception ex) {
       await Transaction!.RollbackAsync();
       return new DbActionResult(false, true, 0, ex);
-    }
-    finally {
+    } finally {
       ResetTransaction();
     }
   }
