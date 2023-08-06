@@ -9,4 +9,5 @@ public interface IUnitOfWorkBase : IDisposable
   int SaveChanges();
   Task<int> SaveChangesAsync();
   bool HasChanges();
+  int GetChangedEntryCount();
 }
