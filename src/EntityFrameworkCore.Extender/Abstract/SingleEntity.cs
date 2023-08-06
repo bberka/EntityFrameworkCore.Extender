@@ -11,7 +11,7 @@ public abstract class SingleEntity
   [Key]
   public bool Key {
     get => _key;
-    set => _key = true;
+    set { }
   }
 
 }
