@@ -8,7 +8,7 @@
 public sealed class EfCoreExtenderOptions
 {
    /// <summary>
-   /// Enables default logging messages for database save actions. It uses Serilog.
+   /// Enables default logging messages for databaseEfCoreExtenderOptions save actions. It uses Serilog.
    /// </summary>
    public bool EnableDefaultErrorLogging { get; set; } = true;
   
