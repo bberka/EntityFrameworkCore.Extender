@@ -6,20 +6,13 @@ using Serilog;
 
 namespace EntityFrameworkCore.Extender;
 
-public abstract class UnitOfWorkBase<TContext> : UnitOfWorkBase
-   where TContext : DbContext, new()
+public abstract class UnitOfWorkBase<TContext> : IUnitOfWorkBase
+   where TContext : DbContext
 {
-   protected UnitOfWorkBase(TContext dbContext, EfCoreExtenderOptions? options = null) : base(dbContext, options)
-   {
-   }
-}
-
-public abstract class UnitOfWorkBase : IUnitOfWorkBase
-{
-   protected readonly DbContext DbContext;
+   protected readonly TContext DbContext;
    private readonly EfCoreExtenderOptions _options;
 
-   protected UnitOfWorkBase(DbContext dbContext, EfCoreExtenderOptions? options = null)
+   protected UnitOfWorkBase(TContext dbContext, EfCoreExtenderOptions? options = null)
    {
       DbContext = dbContext;
       _options = options ?? new();
